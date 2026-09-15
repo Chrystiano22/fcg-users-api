@@ -9,6 +9,7 @@ using Fcg.Users.Infrastructure.Initialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Prometheus;
 
 var builder = WebApplication.CreateBuilder(args);
 var jwtSection = builder.Configuration.GetSection(JwtOptions.SectionName);
@@ -103,9 +104,11 @@ app.UseSwagger();
 app.UseSwaggerUI();
 app.UseStructuredRequestLogging();
 app.UseExceptionHandler();
+app.UseHttpMetrics();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+app.MapMetrics();
 app.MapGet("/", () => Results.Redirect("/swagger")).ExcludeFromDescription();
 app.MapGet("/health", () => Results.Ok(new
 {
